@@ -177,6 +177,13 @@ pairs = []
 for (input, output) in pairs_raw:
       pairs.append((limbs_from_state(input), limbs_from_state(output)))
 
+
+# compute the chain of 32 applications of the permutation on [0,0,0,0]
+chain_state = zero_state
+for i in range(32):
+    chain_state = rescue_pallas.BlockCipher(fixed_key, chain_state)
+chain_state = limbs_from_state(chain_state)
+
 ###################################################################################
 ###################################################################################
 
@@ -216,4 +223,12 @@ print("\n")
 
 print("Test vectors in limbs = [")
 pretty_print(pairs)
+print("\n")
+
+print("Test vectors in limbs = [")
+pretty_print(pairs)
+print("\n")
+
+print("Chain of 32 permutation of [0,0,0,0] = [")
+pretty_print(chain_state)
 print("\n")
