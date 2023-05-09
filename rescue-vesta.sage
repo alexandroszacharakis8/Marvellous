@@ -46,6 +46,25 @@ def permutation_round_keys():
 
     return permutation_round_keys
 
+# return the key injection constants in hex form 
+def ki_vector():
+
+    key_injection = rescue_vesta.initial_constant
+
+    # list to keep the constant 
+    ki_vector = []
+    
+    # store the hex values of keys
+    ki_vector.append([(s[0]) for s in key_injection])
+
+    for r in range(0, 2 * rescue_vesta.Nb):
+
+      key_injection = rescue_vesta.constants_matrix * key_injection + rescue_vesta.constants_constant
+
+      # append the key
+      ki_vector.append([(s[0]) for s in key_injection])
+
+    return ki_vector 
 
 # create limb from string
 def create_limb(str): 
@@ -114,20 +133,31 @@ for i in range(0,4):
 permutation_round_key = permutation_round_keys()
 
 # initial constants
-ic = []
-ic.append([(convert_limbs(k)) for k in permutation_round_key[0]])
-
-# round constants at start and end of full round
-rc_start = []
-rc_end = []
+rc = []
+rc.append([(convert_limbs(k)) for k in permutation_round_key[0]])
 
 for i in range(2 * n_rounds):
     # start of round
     if i % 2 == 0:
-      rc_start.append([(convert_limbs(k)) for k in permutation_round_key[i+1]])
+      rc.append([(convert_limbs(k)) for k in permutation_round_key[i+1]])
     # end of round
     else:
-      rc_end.append([(convert_limbs(k)) for k in permutation_round_key[i+1]])
+      rc.append([(convert_limbs(k)) for k in permutation_round_key[i+1]])
+
+###################################################################################
+###################################################################################
+
+###################################################################################
+#################################### KI Vector ####################################
+
+ki_vector = ki_vector()
+
+# initial constants
+ki = []
+ki.append([(convert_limbs(k)) for k in ki_vector[0]])
+
+for i in range(2 * n_rounds):
+  ki.append([(convert_limbs(k)) for k in ki_vector[i+1]])
 
 ###################################################################################
 ###################################################################################
@@ -161,6 +191,15 @@ pairs_raw.append((zero_state, rescue_vesta.BlockCipher(fixed_key, zero_state)))
 # compute the output for the random pairs
 pairs_raw.extend(list(map(lambda x: (x, rescue_vesta.BlockCipher(fixed_key, x)), inputs)))
 
+# keyed variant
+# sample random key, state pair
+inputs = [(random_input(), random_input()) for _ in range(4)]
+
+keyed_pairs_raw = []
+
+# compute the output for the random pairs
+keyed_pairs_raw.extend(list(map(lambda x: (x[0], x[1], rescue_vesta.BlockCipher(x[0], x[1])), inputs)))
+
 
 # helper function to get the limbs from a state
 # maps each of the elements of the state to its limbs
@@ -176,6 +215,11 @@ def limbs_from_state(state):
 pairs = []
 for (input, output) in pairs_raw:
       pairs.append((limbs_from_state(input), limbs_from_state(output)))
+
+# get limbs from keyed_pairs:
+keyed_pairs = []
+for (key, input, output) in keyed_pairs_raw:
+      keyed_pairs.append((limbs_from_state(key),limbs_from_state(input), limbs_from_state(output)))
 
 # compute the chain of 32 applications of the permutation on [0,0,0,0]
 chain_state = zero_state
@@ -203,17 +247,12 @@ pretty_print(mds)
 print("\n")
 
 
-print("RC_INITIAL = ")
-pretty_print(ic)
+print("RC = ")
+pretty_print(rc)
 print("\n")
 
-
-print("RC_START = ")
-pretty_print(rc_start)
-print("\n")
-
-print("RC_END = [")
-pretty_print(rc_end)
+print("KI = ")
+pretty_print(ki)
 print("\n")
 
 print("Test vectors = [")
@@ -222,6 +261,10 @@ print("\n")
 
 print("Test vectors in limbs = [")
 pretty_print(pairs)
+print("\n")
+
+print("Keyed test vectors in limbs = [")
+pretty_print(keyed_pairs)
 print("\n")
 
 print("Chain of 32 permutation of [0,0,0,0] = [")
