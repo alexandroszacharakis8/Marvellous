@@ -199,6 +199,11 @@ keyed_pairs_raw = []
 # compute the output for the random pairs
 keyed_pairs_raw.extend(list(map(lambda x: (x[0], x[1], rescue_pallas.BlockCipher(x[0], x[1])), inputs)))
 
+# Sponge Test Vectors. We sample 4 vectors of size 12. We use rate 3.
+sponge_inputs_raw = [[rescue_pallas.F.random_element() for _ in range(12)] for _ in range(4)]
+sponge_inputs = [list(map(convert_limbs, x)) for x in sponge_inputs_raw]
+sponge_outputs_raw = [rescue_pallas.Sponge(input, 3) for input in sponge_inputs_raw]
+sponge_outputs = [list(map(convert_limbs, x)) for x in sponge_outputs_raw]
 
 # helper function to get the limbs from a state
 # maps each of the elements of the state to its limbs
@@ -267,6 +272,14 @@ print("\n")
 
 print("Keyed test vectors in limbs = [")
 pretty_print(keyed_pairs)
+print("\n")
+
+print("Sponge test vectors inputs in limbs = [")
+pretty_print(sponge_inputs)
+print("\n")
+
+print("Sponge test vectors outputs in limbs = [")
+pretty_print(sponge_outputs)
 print("\n")
 
 print("Chain of 32 permutation of [0,0,0,0] = [")
