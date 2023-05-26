@@ -234,6 +234,50 @@ chain_state = limbs_from_state(chain_state)
 ###################################################################################
 ###################################################################################
 
+###################################################################################
+################################# Counter mode ####################################
+
+def print_rust_from_raw(w):
+    print("Fp::from_raw([")
+    for limb in w[0]:
+        print(limb + ", ")
+    print("]),")
+
+def print_scalar_slice(w):
+    print("[")
+    for m in w:
+        print_rust_from_raw(m)
+    print("]")
+
+# Select random messages of length 4
+set_random_seed(0)
+messages = [(random_input()) for _ in range(4)]
+
+counter_mode_msgs = [[list(map(convert_limbs, x)) for x in msg] for msg in messages]
+
+# Select a random key
+set_random_seed(1)
+key = random_input()
+
+# Start with zero input
+input = matrix(rescue_pallas.F, [[rescue_pallas.F.zero()]] * rescue_pallas.m)
+
+outputs = copy(messages)
+
+# Encrypt
+for msg in outputs:
+    key_stream = rescue_pallas.BlockCipher(key, input)
+    for i in range(4):
+        msg[i] += key_stream[i]
+
+    input[0,0] += rescue_pallas.F(1)
+
+
+counter_mode_key = [list(map(convert_limbs, x)) for x in key]
+counter_mode_out = [[list(map(convert_limbs, x)) for x in out] for out in outputs]
+
+###################################################################################
+###################################################################################
 
 ###################################################################################
 ################################ Print parameters #################################
@@ -285,3 +329,19 @@ print("\n")
 print("Chain of 32 permutation of [0,0,0,0] = [")
 pretty_print(chain_state)
 print("\n")
+
+print("pub(super) const PALLAS_COUNTER_MODE_MSG: [[Fp; 4]; 4] = [")
+for out in counter_mode_msgs:
+    print_scalar_slice(out)
+    print(",")
+print("];")
+
+print("pub(super) const PALLAS_COUNTER_MODE_KEY: [Fp; 4] = ")
+print_scalar_slice(counter_mode_key)
+print(";")
+
+print("pub(super) const PALLAS_COUNTER_MODE_OUT: [[Fp; 4]; 4] = [")
+for out in counter_mode_out:
+    print_scalar_slice(out)
+    print(",")
+print("];")
