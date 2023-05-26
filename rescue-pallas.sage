@@ -282,53 +282,53 @@ counter_mode_out = [[list(map(convert_limbs, x)) for x in out] for out in output
 ###################################################################################
 ################################ Print parameters #################################
 
-# print("N_ROUNDS = ")
-# pretty_print(n_rounds)
-# print("\n")
-#
-# print("A_INV = ")
-# pretty_print(ainv)
-# print("\n")
-#
-# print("MDS = ")
-# pretty_print(mds)
-# print("\n")
-#
-# print("RC = ")
-# pretty_print(rc)
-# print("\n")
-#
-# print("KI = ")
-# pretty_print(ki)
-# print("\n")
-#
-# print("Test vectors = [")
-# pretty_print(pairs_raw)
-# print("\n")
-#
-# print("Test vectors in limbs = [")
-# pretty_print(pairs)
-# print("\n")
-#
-# print("Test vectors in limbs = [")
-# pretty_print(pairs)
-# print("\n")
-#
-# print("Keyed test vectors in limbs = [")
-# pretty_print(keyed_pairs)
-# print("\n")
-#
-# print("Sponge test vectors inputs in limbs = [")
-# pretty_print(sponge_inputs)
-# print("\n")
-#
-# print("Sponge test vectors outputs in limbs = [")
-# pretty_print(sponge_outputs)
-# print("\n")
-#
-# print("Chain of 32 permutation of [0,0,0,0] = [")
-# pretty_print(chain_state)
-# print("\n")
+print("N_ROUNDS = ")
+pretty_print(n_rounds)
+print("\n")
+
+print("A_INV = ")
+pretty_print(ainv)
+print("\n")
+
+print("MDS = ")
+pretty_print(mds)
+print("\n")
+
+print("RC = ")
+pretty_print(rc)
+print("\n")
+
+print("KI = ")
+pretty_print(ki)
+print("\n")
+
+print("Test vectors = [")
+pretty_print(pairs_raw)
+print("\n")
+
+print("Test vectors in limbs = [")
+pretty_print(pairs)
+print("\n")
+
+print("Test vectors in limbs = [")
+pretty_print(pairs)
+print("\n")
+
+print("Keyed test vectors in limbs = [")
+pretty_print(keyed_pairs)
+print("\n")
+
+print("Sponge test vectors inputs in limbs = [")
+pretty_print(sponge_inputs)
+print("\n")
+
+print("Sponge test vectors outputs in limbs = [")
+pretty_print(sponge_outputs)
+print("\n")
+
+print("Chain of 32 permutation of [0,0,0,0] = [")
+pretty_print(chain_state)
+print("\n")
 
 print("pub(super) const PALLAS_COUNTER_MODE_MSG: [[Fp; 4]; 4] = [")
 for out in counter_mode_msgs:
