@@ -5,7 +5,7 @@ load("instance_generator.sage")
 ##########################################################
 
 ## Field over which rescue functions
-eris_scalar = 102211695604070082112571065507755096754575920209623522239390234855480569854275933742834077002685857629445612735086326265689167708028929
+eris_scalar = 102211695604070082112571065507755096754575920209623522239390234855490679834276115250716018318118556227909439196474813090886893187366913
 
 ## Create parameters for F_{eris_scalar} with state width 4 and \alpha = 5
 rescue_eris = Rescue(128, eris_scalar, 4, 5)
@@ -352,7 +352,7 @@ for (input, output) in list(zip(sponge_inputs, sponge_outputs)):
     print("]),")
 print("];\n")
 
-print("pub(super) const ERIS_COUNTER_MODE_MSG: [[Fp; 4]; 4] = [")
+print("pub(crate) const ERIS_COUNTER_MODE_MSG: [[Fp; 4]; 4] = [")
 for out in counter_mode_msgs:
     print("[")
     for val in out:
@@ -361,14 +361,14 @@ for out in counter_mode_msgs:
     print(",")
 print("];")
 
-print("pub(super) const ERIS_COUNTER_MODE_KEY: [Fp; 4] = ")
+print("pub(crate) const ERIS_COUNTER_MODE_KEY: [Fp; 4] = ")
 print("[")
 for val in counter_mode_key:
     print_scalar_slice(val[0])
 print("]")
 print(";")
 
-print("pub(super) const ERIS_COUNTER_MODE_OUT: [[Fp; 4]; 4] = [")
+print("pub(crate) const ERIS_COUNTER_MODE_OUT: [[Fp; 4]; 4] = [")
 for out in counter_mode_out:
     print("[")
     for val in out:
